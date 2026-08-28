@@ -1,0 +1,53 @@
+{
+  "students": {
+    "netrachandra09@gmail.com": {
+      "name": "Netra Chandra",
+      "enrollments": {
+        "1": {
+          "purchasedOn": "2026-08-01",
+          "accessMode": "full",
+          "batch": null
+        },
+        "2": {
+          "purchasedOn": "2026-08-01",
+          "accessMode": "full",
+          "batch": 1
+        }
+      }
+    },
+    "rinkumfa@gmail.com": {
+      "name": "Rinku",
+      "enrollments": {
+        "1": {
+          "purchasedOn": "2026-08-01",
+          "accessMode": "full",
+          "batch": null
+        },
+        "2": {
+          "purchasedOn": "2026-08-01",
+          "accessMode": "full",
+          "batch": 1
+        }
+      }
+    }
+  },
+  "progress": {
+    "rinkumfa@gmail.com": {
+      "completed": {},
+      "watch": {},
+      "firstSeen": "2026-08-28T02:59:14.342Z",
+      "lastActive": "2026-08-28T02:59:14.342Z"
+    }
+  },
+  "customLessons": {},
+  "tokens": {
+    "eac70a78965b5f80bc20a54675f24d7e02518686d4ef56f2": {
+      "email": "neetu.singhal@nokia.com",
+      "isAdmin": true
+    },
+    "5c6c82bd40d414a9e6bf34398a51b33935787cb2d3c49b11": {
+      "email": "rinkumfa@gmail.com",
+      "isAdmin": false
+    }
+  }
+}

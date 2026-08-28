@@ -1,0 +1,14 @@
+{
+  "name": "astro-by-neetu",
+  "version": "1.0.0",
+  "description": "Premium mobile-first hybrid wellness and spiritual e-learning platform",
+  "main": "server.js",
+  "scripts": {
+    "dev": "npx -y http-server . -p 3000 -o",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {}
+}
