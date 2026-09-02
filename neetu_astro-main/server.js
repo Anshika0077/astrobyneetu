@@ -41,7 +41,30 @@ const SEED = {
                 '1': { purchasedOn: '2026-08-01', accessMode: 'full', batch: null },
                 '2': { purchasedOn: '2026-08-01', accessMode: 'full', batch: 1 }
             }
+        
+                },
+        'jiya.maikhuri02@gmail.com': {
+            name: 'Jiya Maikhuri',
+            enrollments: {
+                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: null },
+                '2': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 1 }
+            }
+        },
+        'dropin4nidhi@gmail.com': {
+            name: 'Nidhi',
+            enrollments: {
+                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: null },
+                '2': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 1 }
+            }
+        },
+        'dwivedi.sumita@yahoo.in': {
+            name: 'Sumita Dwivedi',
+            enrollments: {
+                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: null },
+                '2': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 1 }
+            }
         }
+    
     },
     // email -> { completed: {lessonId:true}, watch: {lessonId:seconds},
     //            lastActive: ISO string, firstSeen: ISO string }
@@ -49,7 +72,9 @@ const SEED = {
     // Classes added through the admin panel
     customLessons: {},
     // token -> { email, isAdmin }
-    tokens: {}
+        tokens: {},
+    // students removed from the admin panel, so the seed can't resurrect them
+    removedStudents: []
 };
 
 // ---------------------------------------------------------------- storage
@@ -57,7 +82,18 @@ function readStore() {
     try {
         if (!fs.existsSync(DATA_FILE)) return JSON.parse(JSON.stringify(SEED));
         const parsed = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-        return Object.assign(JSON.parse(JSON.stringify(SEED)), parsed);
+                const store = Object.assign(JSON.parse(JSON.stringify(SEED)), parsed);
+
+        // Saved data replaces the seed list, so students added to SEED after
+        // store.json already exists would never appear. Merge them in — but
+        // skip anyone deliberately removed from the admin panel.
+        const removed = store.removedStudents || [];
+        Object.keys(SEED.students).forEach(email => {
+            if (!store.students[email] && removed.indexOf(email) === -1) {
+                store.students[email] = JSON.parse(JSON.stringify(SEED.students[email]));
+            }
+        });
+        return store;
     } catch (e) {
         console.error('Could not read store.json, falling back to seed data:', e.message);
         return JSON.parse(JSON.stringify(SEED));
@@ -251,6 +287,9 @@ app.post('/api/admin/student', (req, res) => {
     }
 
     const store = readStore();
+        if (store.removedStudents) {
+        store.removedStudents = store.removedStudents.filter(e => e !== email);
+    }
     if (!store.students[email]) store.students[email] = { name: name || 'Student', enrollments: {} };
     if (name) store.students[email].name = name;
     store.students[email].enrollments[String(courseId)] = {
@@ -277,6 +316,8 @@ app.post('/api/admin/student/remove', (req, res) => {
     } else {
         delete store.students[email];
         delete store.progress[email];
+                store.removedStudents = store.removedStudents || [];
+        if (store.removedStudents.indexOf(email) === -1) store.removedStudents.push(email);
         // Sign them out everywhere immediately
         Object.keys(store.tokens).forEach(t => {
             if (store.tokens[t].email === email) delete store.tokens[t];
