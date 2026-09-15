@@ -99,12 +99,22 @@ let lessons = {
     "2b1.21": { id: "2b1.21", courseId: 2, batch: 1, order: 21, title: "7th lord in different houses",        youtubeEmbedId: "5RexztDZRb4" },
     "2b1.22": { id: "2b1.22", courseId: 2, batch: 1, order: 22, title: "8th lord in different houses",        youtubeEmbedId: "KIbNpT1dAYM" },
     "2b1.23": { id: "2b1.23", courseId: 2, batch: 1, order: 23, title: "Yogas part 1",                        youtubeEmbedId: "A8FdYaz-bGQ" },
-    "2b1.24": { id: "2b1.24", courseId: 2, batch: 1, order: 24, title: "Yogas part 2",                        youtubeEmbedId: "N2t3EPWlLfY" }
+    "2b1.24": { id: "2b1.24", courseId: 2, batch: 1, order: 24, title: "Yogas part 2",                        youtubeEmbedId: "N2t3EPWlLfY" },
 
     // ---------- JYOTISH SIDDHI — BATCH 2 ----------
-    // (empty for now — add entries here or via the Admin Panel, e.g.)
-    // "2b2.1": { id: "2b2.1", courseId: 2, batch: 2, order: 1, title: "Class 1 topic", youtubeEmbedId: "VIDEO_ID" },
+        // ---------- JYOTISH SIDDHI — BATCH 2 ----------
+    "2b2.1":  { id: "2b2.1",  courseId: 2, batch: 2, order: 1,  title: "Class 1",                   youtubeEmbedId: "9Z3eSv-AEC4" },
+    "2b2.2":  { id: "2b2.2",  courseId: 2, batch: 2, order: 2,  title: "Class 2",                   youtubeEmbedId: "ttOzKp9SNhM" },
+    "2b2.3":  { id: "2b2.3",  courseId: 2, batch: 2, order: 3,  title: "Class 3",                   youtubeEmbedId: "GkB54Ps4pFU" },
+    "2b2.4":  { id: "2b2.4",  courseId: 2, batch: 2, order: 4,  title: "Rashi Introduction part 2", youtubeEmbedId: "tYl_0Ii_V3s" },
+    "2b2.5":  { id: "2b2.5",  courseId: 2, batch: 2, order: 5,  title: "Class 5",                   youtubeEmbedId: "PuBTT-ubCV4" },
+    "2b2.6":  { id: "2b2.6",  courseId: 2, batch: 2, order: 6,  title: "Discussion",                youtubeEmbedId: "x5YUWEcl07U" },
+    "2b2.7":  { id: "2b2.7",  courseId: 2, batch: 2, order: 7,  title: "Class 7",                   youtubeEmbedId: "06CD345gqv0" },
+    "2b2.8":  { id: "2b2.8",  courseId: 2, batch: 2, order: 8,  title: "Class 8",                   youtubeEmbedId: "volA1g-PXBs" },
+    "2b2.9":  { id: "2b2.9",  courseId: 2, batch: 2, order: 9,  title: "Class 9",                   youtubeEmbedId: "SaC4bzZ1SLw" },
+    "2b2.10": { id: "2b2.10", courseId: 2, batch: 2, order: 10, title: "Class 10",                  youtubeEmbedId: "UrdPWGRYAwY" }
 };
+
 
 const nakshatras = [
     "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira",
@@ -998,15 +1008,22 @@ function renderBatchSwitcher() {
         return;
     }
 
-    row.style.display = "flex";
     const myBatch = enrollmentBatch(state.activeCourseId);
 
-    tabs.innerHTML = course.batches.map(b => {
-        const ownerView = isOwner();
+    // Students only ever see their own batch. The admin sees every batch so
+    // classes can be checked and added.
+    const visibleBatches = isOwner() ? course.batches : course.batches.filter(b => b === myBatch);
+
+    if (visibleBatches.length === 0) {
+        row.style.display = "none";
+        return;
+    }
+
+    row.style.display = "flex";
+    tabs.innerHTML = visibleBatches.map(b => {
         const count = classesFor(course.id, b).length;
-        const mine = ownerView || b === myBatch;
         const label = count === 0 ? `Batch ${b} · coming soon` : `Batch ${b} · ${count} classes`;
-        return `<button class="batch-tab ${b === state.activeBatch ? 'active' : ''} ${mine ? '' : 'batch-tab-locked'}"
+        return `<button class="batch-tab ${b === state.activeBatch ? 'active' : ''}"
                         onclick="switchBatch(${b})">${label}</button>`;
     }).join("");
 }
