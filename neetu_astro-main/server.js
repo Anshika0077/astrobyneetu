@@ -31,40 +31,33 @@ const SEED = {
         'netrachandra09@gmail.com': {
             name: 'Netra Chandra',
             enrollments: {
-                '1': { purchasedOn: '2026-08-01', accessMode: 'full', batch: null },
-                '2': { purchasedOn: '2026-08-01', accessMode: 'full', batch: 1 }
+                '1': { purchasedOn: '2026-08-01', accessMode: 'full', batch: 1 }
             }
         },
         'rinkumfa@gmail.com': {
             name: 'Rinku',
             enrollments: {
-                '1': { purchasedOn: '2026-08-01', accessMode: 'full', batch: null },
-                '2': { purchasedOn: '2026-08-01', accessMode: 'full', batch: 1 }
-            }
-        
-                },
-        'jiya.maikhuri02@gmail.com': {
-            name: 'Jiya Maikhuri',
-            enrollments: {
-                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: null },
-                '2': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 1 }
-            }
-        },
-        'dropin4nidhi@gmail.com': {
-            name: 'Nidhi',
-            enrollments: {
-                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: null },
-                '2': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 1 }
+                '1': { purchasedOn: '2026-08-01', accessMode: 'full', batch: 1 }
             }
         },
         'dwivedi.sumita@yahoo.in': {
             name: 'Sumita Dwivedi',
             enrollments: {
-                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: null },
-                '2': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 1 }
+                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 1 }
+            }
+        },
+        'jiya.maikhuri02@gmail.com': {
+            name: 'Jiya Maikhuri',
+            enrollments: {
+                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 2 }
+            }
+        },
+        'dropin4nidhi@gmail.com': {
+            name: 'Nidhi',
+            enrollments: {
+                '1': { purchasedOn: '2026-09-02', accessMode: 'full', batch: 2 }
             }
         }
-    
     },
     // email -> { completed: {lessonId:true}, watch: {lessonId:seconds},
     //            lastActive: ISO string, firstSeen: ISO string }
@@ -72,7 +65,7 @@ const SEED = {
     // Classes added through the admin panel
     customLessons: {},
     // token -> { email, isAdmin }
-        tokens: {},
+    tokens: {},
     // students removed from the admin panel, so the seed can't resurrect them
     removedStudents: []
 };
@@ -82,7 +75,7 @@ function readStore() {
     try {
         if (!fs.existsSync(DATA_FILE)) return JSON.parse(JSON.stringify(SEED));
         const parsed = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-                const store = Object.assign(JSON.parse(JSON.stringify(SEED)), parsed);
+        const store = Object.assign(JSON.parse(JSON.stringify(SEED)), parsed);
 
         // Saved data replaces the seed list, so students added to SEED after
         // store.json already exists would never appear. Merge them in — but
@@ -109,6 +102,24 @@ function writeStore(store) {
         console.error('Could not write store.json:', e.message);
         return false;
     }
+}
+
+// ---------------------------------------------------------------- passwords
+// Passwords are salted and hashed with scrypt. The plain text is never stored,
+// so even someone reading store.json cannot recover it.
+function hashPassword(password) {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.scryptSync(String(password), salt, 64).toString('hex');
+    return salt + ':' + hash;
+}
+
+function verifyPassword(password, stored) {
+    if (!stored || typeof stored !== 'string' || stored.indexOf(':') === -1) return false;
+    const [salt, hash] = stored.split(':');
+    const candidate = crypto.scryptSync(String(password), salt, 64);
+    const expected = Buffer.from(hash, 'hex');
+    if (candidate.length !== expected.length) return false;
+    return crypto.timingSafeEqual(candidate, expected);
 }
 
 const lower = (s) => String(s || '').trim().toLowerCase();
@@ -179,6 +190,19 @@ app.post('/api/login', (req, res) => {
                 error: 'This email is not registered for any course. If you have purchased the course, please contact Neetu to get access.'
             });
         }
+
+        // First time this student signs in: ask them to choose a password
+        if (!student.password) {
+            return res.json({ needsPassword: true, name: student.name || 'Student' });
+        }
+
+        if (!req.body.password) {
+            return res.status(401).json({ error: 'Please enter your password.' });
+        }
+        if (!verifyPassword(req.body.password, student.password)) {
+            return res.status(401).json({ error: 'Incorrect password. If you have forgotten it, ask Neetu to reset it for you.' });
+        }
+
         user = { email, name: student.name || 'Student', isAdmin: false };
     }
 
@@ -198,6 +222,41 @@ app.post('/api/login', (req, res) => {
         user,
         enrollments: user.isAdmin ? {} : (store.students[email].enrollments || {}),
         progress: user.isAdmin ? { completed: {}, watch: {} } : store.progress[email],
+        customLessons: store.customLessons || {}
+    });
+});
+
+// A student choosing their password for the first time. This only works while
+// no password is set, so nobody can use it to overwrite someone else's.
+app.post('/api/set-password', (req, res) => {
+    const email = lower(req.body.email);
+    const password = String(req.body.password || '');
+    const store = readStore();
+    const student = store.students[email];
+
+    if (!student) return res.status(401).json({ error: 'This email is not registered for any course.' });
+    if (student.password) {
+        return res.status(400).json({ error: 'A password is already set for this account. Ask Neetu to reset it if you have forgotten it.' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ error: 'Please choose a password of at least 6 characters.' });
+    }
+
+    student.password = hashPassword(password);
+
+    const token = crypto.randomBytes(24).toString('hex');
+    store.tokens[token] = { email, isAdmin: false };
+    if (!store.progress[email]) {
+        store.progress[email] = { completed: {}, watch: {}, firstSeen: new Date().toISOString() };
+    }
+    store.progress[email].lastActive = new Date().toISOString();
+    writeStore(store);
+
+    res.json({
+        token,
+        user: { email, name: student.name || 'Student', isAdmin: false },
+        enrollments: student.enrollments || {},
+        progress: store.progress[email],
         customLessons: store.customLessons || {}
     });
 });
@@ -270,7 +329,19 @@ app.post('/api/progress', (req, res) => {
 app.get('/api/admin/data', (req, res) => {
     if (!requireAdmin(req, res)) return;
     const store = readStore();
-    res.json({ students: store.students, progress: store.progress, customLessons: store.customLessons });
+
+    // Strip the password hashes — the browser only needs to know whether one is set
+    const safeStudents = {};
+    Object.keys(store.students).forEach(email => {
+        const s = store.students[email];
+        safeStudents[email] = {
+            name: s.name,
+            enrollments: s.enrollments || {},
+            hasPassword: !!s.password
+        };
+    });
+
+    res.json({ students: safeStudents, progress: store.progress, customLessons: store.customLessons });
 });
 
 app.post('/api/admin/student', (req, res) => {
@@ -287,11 +358,11 @@ app.post('/api/admin/student', (req, res) => {
     }
 
     const store = readStore();
-        if (store.removedStudents) {
+    if (store.removedStudents) {
         store.removedStudents = store.removedStudents.filter(e => e !== email);
     }
     if (!store.students[email]) store.students[email] = { name: name || 'Student', enrollments: {} };
-    if (name) store.students[email].name = name;
+    if (name) store.students[email].name = name;  // note: never touches student.password
     store.students[email].enrollments[String(courseId)] = {
         purchasedOn,
         accessMode: accessMode === 'drip' ? 'drip' : 'full',
@@ -316,7 +387,7 @@ app.post('/api/admin/student/remove', (req, res) => {
     } else {
         delete store.students[email];
         delete store.progress[email];
-                store.removedStudents = store.removedStudents || [];
+        store.removedStudents = store.removedStudents || [];
         if (store.removedStudents.indexOf(email) === -1) store.removedStudents.push(email);
         // Sign them out everywhere immediately
         Object.keys(store.tokens).forEach(t => {
@@ -326,6 +397,23 @@ app.post('/api/admin/student/remove', (req, res) => {
 
     writeStore(store);
     res.json({ ok: true, students: store.students, progress: store.progress });
+});
+
+// Clears a student's password so they can choose a new one at next sign-in
+app.post('/api/admin/student/reset-password', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+
+    const email = lower(req.body.email);
+    const store = readStore();
+    if (!store.students[email]) return res.status(404).json({ error: 'No such student.' });
+
+    delete store.students[email].password;
+    // Sign them out everywhere so the old session cannot linger
+    Object.keys(store.tokens).forEach(t => {
+        if (store.tokens[t].email === email) delete store.tokens[t];
+    });
+    writeStore(store);
+    res.json({ ok: true });
 });
 
 app.post('/api/admin/class', (req, res) => {

@@ -6,11 +6,6 @@
         "1": {
           "purchasedOn": "2026-08-01",
           "accessMode": "full",
-          "batch": null
-        },
-        "2": {
-          "purchasedOn": "2026-08-01",
-          "accessMode": "full",
           "batch": 1
         }
       }
@@ -21,12 +16,37 @@
         "1": {
           "purchasedOn": "2026-08-01",
           "accessMode": "full",
-          "batch": null
-        },
-        "2": {
-          "purchasedOn": "2026-08-01",
+          "batch": 1
+        }
+      }
+    },
+    "dwivedi.sumita@yahoo.in": {
+      "name": "Sumita Dwivedi",
+      "enrollments": {
+        "1": {
+          "purchasedOn": "2026-09-02",
           "accessMode": "full",
           "batch": 1
+        }
+      }
+    },
+    "jiya.maikhuri02@gmail.com": {
+      "name": "Jiya Maikhuri",
+      "enrollments": {
+        "1": {
+          "purchasedOn": "2026-09-02",
+          "accessMode": "full",
+          "batch": 2
+        }
+      }
+    },
+    "dropin4nidhi@gmail.com": {
+      "name": "Nidhi",
+      "enrollments": {
+        "1": {
+          "purchasedOn": "2026-09-02",
+          "accessMode": "full",
+          "batch": 2
         }
       }
     }
@@ -35,19 +55,16 @@
     "rinkumfa@gmail.com": {
       "completed": {},
       "watch": {},
-      "firstSeen": "2026-08-28T02:59:14.342Z",
-      "lastActive": "2026-08-28T03:02:15.953Z"
+      "firstSeen": "2026-09-17T20:38:54.375Z",
+      "lastActive": "2026-09-17T20:39:21.233Z"
     }
   },
   "customLessons": {},
   "tokens": {
-    "eac70a78965b5f80bc20a54675f24d7e02518686d4ef56f2": {
+    "0549d3a239e6d8e800caee3a42bb8367dc76507df88fb9c7": {
       "email": "neetu.singhal@nokia.com",
       "isAdmin": true
-    },
-    "5c6c82bd40d414a9e6bf34398a51b33935787cb2d3c49b11": {
-      "email": "rinkumfa@gmail.com",
-      "isAdmin": false
     }
-  }
+  },
+  "removedStudents": []
 }

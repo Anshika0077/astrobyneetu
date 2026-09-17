@@ -28,12 +28,13 @@ const courses = {
         title: "Jyotish Bodh (Beginner Astrology Course)",
         price: 2100,
         rating: 4.9,
-        declaredLessons: 24,
+        declaredLessons: 0,   // 0 = measure progress against classes actually uploaded
         category: "Beginner Astrology",
         instructor: "Neetu",
         level: "Beginner",
         duration: "6 months",
-        hasBatches: false,
+        hasBatches: true,
+        batches: [1, 2],
         certificate: false,   // <-- certificate removed for Jyotish Bodh
         symbol: "🕉️",
         desc: "Learn Basics of Astrology, 12 Houses & Predictions, 12 Zodiac Signs & Predictions, 9 Planets & Their Significations, Results of Each Planet in 12 Houses, Ascendant (Lagna) Fundamentals, Planetary Aspects, Yogas in Astrology, Introduction to Dashas, and Practical Chart Reading."
@@ -43,13 +44,12 @@ const courses = {
         title: "Jyotish Siddhi (Advanced Kundali Analysis Course)",
         price: 5100,
         rating: 5.0,
-        declaredLessons: 24,
+        declaredLessons: 0,   // 0 = measure progress against classes actually uploaded
         category: "Advanced Astrology",
         instructor: "Neetu",
         level: "Advanced",
         duration: "8 months",
-        hasBatches: true,
-        batches: [1, 2],
+        hasBatches: false,    // no batches yet — set to true and add batches: [1, 2] later
         certificate: true,
         symbol: "🔮",
         desc: "Go beyond the birth chart: planets and Rahu-Ketu through the 12 houses, house lords in different houses, Bhavat Bhavam, Rashi and Bhava analysis, Yogas, quizzes and practical assignments."
@@ -64,57 +64,47 @@ const courses = {
 // ==========================================================================
 let lessons = {
 
-    // ---------- JYOTISH BODH ----------
-    "1.1": {
-        id: "1.1", courseId: 1, batch: null, order: 1,
-        title: "Basics of Astrology & Cosmic Principles",
-        duration: "53 mins",
-        pdf: "L1_Astro_ProfCourse_Class1.pdf",
-        pdfUrl: "pdfs/L1_Astro_ProfCourse_Class1.pdf",
-        youtubeEmbedId: "N_W-SOMNJ_4"
-    },
+    // ---------- JYOTISH BODH — BATCH 1 ----------
+    "1b1.1":  { id: "1b1.1",  courseId: 1, batch: 1, order: 1,  title: "Basics of Astrology & Cosmic Principles",
+                duration: "53 mins", pdf: "L1_Astro_ProfCourse_Class1.pdf",
+                pdfUrl: "pdfs/L1_Astro_ProfCourse_Class1.pdf", youtubeEmbedId: "N_W-SOMNJ_4" },
+    "1b1.2":  { id: "1b1.2",  courseId: 1, batch: 1, order: 2,  title: "Blue print, Introduction to planets", youtubeEmbedId: "WhWnZfO_EDs" },
+    "1b1.3":  { id: "1b1.3",  courseId: 1, batch: 1, order: 3,  title: "Introduction to houses",            youtubeEmbedId: "IxS4WjJckeY" },
+    "1b1.4":  { id: "1b1.4",  courseId: 1, batch: 1, order: 4,  title: "Discussion",                        youtubeEmbedId: "x5YUWEcl07U" },
+    "1b1.5":  { id: "1b1.5",  courseId: 1, batch: 1, order: 5,  title: "Rashi Introduction part 1",         youtubeEmbedId: "2B2V9NWAaiE" },
+    "1b1.6":  { id: "1b1.6",  courseId: 1, batch: 1, order: 6,  title: "Rashi Introduction part 2",         youtubeEmbedId: "tYl_0Ii_V3s" },
+    "1b1.7":  { id: "1b1.7",  courseId: 1, batch: 1, order: 7,  title: "Bhavat Bhavam (In Chart)",          youtubeEmbedId: "N_W-SOMNJ_4" },
+    "1b1.8":  { id: "1b1.8",  courseId: 1, batch: 1, order: 8,  title: "Quiz on Bhava and Rashi",           youtubeEmbedId: "WqyNdhluPrg" },
+    "1b1.9":  { id: "1b1.9",  courseId: 1, batch: 1, order: 9,  title: "Quiz for beginners",                youtubeEmbedId: "0fM-dXqM15E" },
+    "1b1.10": { id: "1b1.10", courseId: 1, batch: 1, order: 10, title: "Rahu in 12 houses",                 youtubeEmbedId: "RbnuGvOqdcI" },
+    "1b1.11": { id: "1b1.11", courseId: 1, batch: 1, order: 11, title: "Ketu in 12 houses",                 youtubeEmbedId: "tp3UuCyGmaQ" },
+    "1b1.12": { id: "1b1.12", courseId: 1, batch: 1, order: 12, title: "Mars in 12 houses",                 youtubeEmbedId: "G6hri27R-nA" },
+    "1b1.13": { id: "1b1.13", courseId: 1, batch: 1, order: 13, title: "Assignment",                        youtubeEmbedId: "71yZteqvKFA" },
+    "1b1.14": { id: "1b1.14", courseId: 1, batch: 1, order: 14, title: "Venus in 12 houses",                youtubeEmbedId: "6xn48WhXzhs" },
+    "1b1.15": { id: "1b1.15", courseId: 1, batch: 1, order: 15, title: "Mercury in 12 houses",              youtubeEmbedId: "R-bgvCLxl4Y" },
+    "1b1.16": { id: "1b1.16", courseId: 1, batch: 1, order: 16, title: "Saturn in 12 houses",               youtubeEmbedId: "NS_lzpKLbXE" },
+    "1b1.17": { id: "1b1.17", courseId: 1, batch: 1, order: 17, title: "1st lord in different houses",      youtubeEmbedId: "fYeA7zRsGzQ" },
+    "1b1.18": { id: "1b1.18", courseId: 1, batch: 1, order: 18, title: "2nd lord in different houses",      youtubeEmbedId: "xORgf1kEIIY" },
+    "1b1.19": { id: "1b1.19", courseId: 1, batch: 1, order: 19, title: "4th lord in different houses",      youtubeEmbedId: "iAZcf4aNMjc" },
+    "1b1.20": { id: "1b1.20", courseId: 1, batch: 1, order: 20, title: "5th lord in different houses",      youtubeEmbedId: null },
+    "1b1.21": { id: "1b1.21", courseId: 1, batch: 1, order: 21, title: "6th lord in different houses",      youtubeEmbedId: "gVZuhGjFdjs" },
+    "1b1.22": { id: "1b1.22", courseId: 1, batch: 1, order: 22, title: "7th lord in different houses",      youtubeEmbedId: "5RexztDZRb4" },
+    "1b1.23": { id: "1b1.23", courseId: 1, batch: 1, order: 23, title: "8th lord in different houses",      youtubeEmbedId: "KIbNpT1dAYM" },
+    "1b1.24": { id: "1b1.24", courseId: 1, batch: 1, order: 24, title: "Yogas part 1",                      youtubeEmbedId: "A8FdYaz-bGQ" },
+    "1b1.25": { id: "1b1.25", courseId: 1, batch: 1, order: 25, title: "Yogas part 2",                      youtubeEmbedId: "N2t3EPWlLfY" },
 
-    // ---------- JYOTISH SIDDHI — BATCH 1 ----------
-    "2b1.1":  { id: "2b1.1",  courseId: 2, batch: 1, order: 1,  title: "Blue print, Introduction to planets", youtubeEmbedId: "WhWnZfO_EDs" },
-    "2b1.2":  { id: "2b1.2",  courseId: 2, batch: 1, order: 2,  title: "Introduction to houses",              youtubeEmbedId: "IxS4WjJckeY" },
-    "2b1.3":  { id: "2b1.3",  courseId: 2, batch: 1, order: 3,  title: "Discussion",                          youtubeEmbedId: "x5YUWEcl07U" },
-    "2b1.4":  { id: "2b1.4",  courseId: 2, batch: 1, order: 4,  title: "Rashi Introduction part 1",           youtubeEmbedId: "2B2V9NWAaiE" },
-    "2b1.5":  { id: "2b1.5",  courseId: 2, batch: 1, order: 5,  title: "Rashi Introduction part 2",           youtubeEmbedId: "tYl_0Ii_V3s" },
-    "2b1.6":  { id: "2b1.6",  courseId: 2, batch: 1, order: 6,  title: "Bhavat Bhavam (In Chart)",            youtubeEmbedId: "N_W-SOMNJ_4" },
-    "2b1.7":  { id: "2b1.7",  courseId: 2, batch: 1, order: 7,  title: "Quiz on Bhava and Rashi",             youtubeEmbedId: "WqyNdhluPrg" },
-    "2b1.8":  { id: "2b1.8",  courseId: 2, batch: 1, order: 8,  title: "Quiz for beginners",                  youtubeEmbedId: "0fM-dXqM15E" },
-    "2b1.9":  { id: "2b1.9",  courseId: 2, batch: 1, order: 9,  title: "Rahu in 12 houses",                   youtubeEmbedId: "RbnuGvOqdcI" },
-    "2b1.10": { id: "2b1.10", courseId: 2, batch: 1, order: 10, title: "Ketu in 12 houses",                   youtubeEmbedId: "tp3UuCyGmaQ" },
-    "2b1.11": { id: "2b1.11", courseId: 2, batch: 1, order: 11, title: "Mars in 12 houses",                   youtubeEmbedId: "G6hri27R-nA" },
-    "2b1.12": { id: "2b1.12", courseId: 2, batch: 1, order: 12, title: "Assignment",                          youtubeEmbedId: "71yZteqvKFA" },
-    "2b1.13": { id: "2b1.13", courseId: 2, batch: 1, order: 13, title: "Venus in 12 houses",                  youtubeEmbedId: "6xn48WhXzhs" },
-    "2b1.14": { id: "2b1.14", courseId: 2, batch: 1, order: 14, title: "Mercury in 12 houses",                youtubeEmbedId: "R-bgvCLxl4Y" },
-    "2b1.15": { id: "2b1.15", courseId: 2, batch: 1, order: 15, title: "Saturn in 12 houses",                 youtubeEmbedId: "NS_lzpKLbXE" },
-    "2b1.16": { id: "2b1.16", courseId: 2, batch: 1, order: 16, title: "1st lord in different houses",        youtubeEmbedId: "fYeA7zRsGzQ" },
-    "2b1.17": { id: "2b1.17", courseId: 2, batch: 1, order: 17, title: "2nd lord in different houses",        youtubeEmbedId: "xORgf1kEIIY" },
-    "2b1.18": { id: "2b1.18", courseId: 2, batch: 1, order: 18, title: "4th lord in different houses",        youtubeEmbedId: "iAZcf4aNMjc" },
-    // No video link was present in the sheet for the 5th lord class.
-    "2b1.19": { id: "2b1.19", courseId: 2, batch: 1, order: 19, title: "5th lord in different houses",        youtubeEmbedId: null },
-    "2b1.20": { id: "2b1.20", courseId: 2, batch: 1, order: 20, title: "6th lord in different houses",        youtubeEmbedId: "gVZuhGjFdjs" },
-    "2b1.21": { id: "2b1.21", courseId: 2, batch: 1, order: 21, title: "7th lord in different houses",        youtubeEmbedId: "5RexztDZRb4" },
-    "2b1.22": { id: "2b1.22", courseId: 2, batch: 1, order: 22, title: "8th lord in different houses",        youtubeEmbedId: "KIbNpT1dAYM" },
-    "2b1.23": { id: "2b1.23", courseId: 2, batch: 1, order: 23, title: "Yogas part 1",                        youtubeEmbedId: "A8FdYaz-bGQ" },
-    "2b1.24": { id: "2b1.24", courseId: 2, batch: 1, order: 24, title: "Yogas part 2",                        youtubeEmbedId: "N2t3EPWlLfY" },
-
-    // ---------- JYOTISH SIDDHI — BATCH 2 ----------
-        // ---------- JYOTISH SIDDHI — BATCH 2 ----------
-    "2b2.1":  { id: "2b2.1",  courseId: 2, batch: 2, order: 1,  title: "Class 1",                   youtubeEmbedId: "9Z3eSv-AEC4" },
-    "2b2.2":  { id: "2b2.2",  courseId: 2, batch: 2, order: 2,  title: "Class 2",                   youtubeEmbedId: "ttOzKp9SNhM" },
-    "2b2.3":  { id: "2b2.3",  courseId: 2, batch: 2, order: 3,  title: "Class 3",                   youtubeEmbedId: "GkB54Ps4pFU" },
-    "2b2.4":  { id: "2b2.4",  courseId: 2, batch: 2, order: 4,  title: "Rashi Introduction part 2", youtubeEmbedId: "tYl_0Ii_V3s" },
-    "2b2.5":  { id: "2b2.5",  courseId: 2, batch: 2, order: 5,  title: "Class 5",                   youtubeEmbedId: "PuBTT-ubCV4" },
-    "2b2.6":  { id: "2b2.6",  courseId: 2, batch: 2, order: 6,  title: "Discussion",                youtubeEmbedId: "x5YUWEcl07U" },
-    "2b2.7":  { id: "2b2.7",  courseId: 2, batch: 2, order: 7,  title: "Class 7",                   youtubeEmbedId: "06CD345gqv0" },
-    "2b2.8":  { id: "2b2.8",  courseId: 2, batch: 2, order: 8,  title: "Class 8",                   youtubeEmbedId: "volA1g-PXBs" },
-    "2b2.9":  { id: "2b2.9",  courseId: 2, batch: 2, order: 9,  title: "Class 9",                   youtubeEmbedId: "SaC4bzZ1SLw" },
-    "2b2.10": { id: "2b2.10", courseId: 2, batch: 2, order: 10, title: "Class 10",                  youtubeEmbedId: "UrdPWGRYAwY" }
+    // ---------- JYOTISH BODH — BATCH 2 ----------
+    "1b2.1":  { id: "1b2.1",  courseId: 1, batch: 2, order: 1,  title: "Class 1",                           youtubeEmbedId: "9Z3eSv-AEC4" },
+    "1b2.2":  { id: "1b2.2",  courseId: 1, batch: 2, order: 2,  title: "Class 2",                           youtubeEmbedId: "ttOzKp9SNhM" },
+    "1b2.3":  { id: "1b2.3",  courseId: 1, batch: 2, order: 3,  title: "Class 3",                           youtubeEmbedId: "GkB54Ps4pFU" },
+    "1b2.4":  { id: "1b2.4",  courseId: 1, batch: 2, order: 4,  title: "Rashi Introduction part 2",         youtubeEmbedId: "tYl_0Ii_V3s" },
+    "1b2.5":  { id: "1b2.5",  courseId: 1, batch: 2, order: 5,  title: "Class 5",                           youtubeEmbedId: "PuBTT-ubCV4" },
+    "1b2.6":  { id: "1b2.6",  courseId: 1, batch: 2, order: 6,  title: "Discussion",                        youtubeEmbedId: "x5YUWEcl07U" },
+    "1b2.7":  { id: "1b2.7",  courseId: 1, batch: 2, order: 7,  title: "Class 7",                           youtubeEmbedId: "06CD345gqv0" },
+    "1b2.8":  { id: "1b2.8",  courseId: 1, batch: 2, order: 8,  title: "Class 8",                           youtubeEmbedId: "volA1g-PXBs" },
+    "1b2.9":  { id: "1b2.9",  courseId: 1, batch: 2, order: 9,  title: "Class 9",                           youtubeEmbedId: "SaC4bzZ1SLw" },
+    "1b2.10": { id: "1b2.10", courseId: 1, batch: 2, order: 10, title: "Class 10",                          youtubeEmbedId: "UrdPWGRYAwY" }
 };
-
 
 const nakshatras = [
     "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira",
@@ -222,9 +212,17 @@ function looksLikeAdmin(email) {
 }
 
 function onLoginEmailInput() {
-    const passField = document.getElementById("adminPassField");
-    if (passField) {
-        passField.style.display = looksLikeAdmin(document.getElementById("loginEmail").value) ? "block" : "none";
+    const isAdmin = looksLikeAdmin(document.getElementById("loginEmail").value);
+    document.getElementById("adminPassField").style.display = isAdmin ? "block" : "none";
+    if (isAdmin) {
+        // Admin uses the passcode box, not the student password boxes
+        document.getElementById("studentPassField").style.display = "none";
+        document.getElementById("confirmPassField").style.display = "none";
+        loginMode = 'admin';
+        setLoginButton("Sign In");
+    } else if (loginMode === 'admin') {
+        loginMode = 'signin';
+        setLoginButton("Sign In");
     }
 }
 
@@ -243,9 +241,21 @@ function showLoginError(msg) {
     }
 }
 
+function setLoginButton(label) {
+    const el = document.getElementById("loginBtnLabel");
+    if (el) el.textContent = label;
+}
+
+// 'signin'  = email + password
+// 'create'  = first time in, choosing a password
+// 'admin'   = email + admin passcode
+let loginMode = 'signin';
+
 async function attemptLogin() {
     const email = normaliseEmail(document.getElementById("loginEmail").value);
     const passcode = document.getElementById("loginAdminPass").value;
+    const password = document.getElementById("loginPassword").value;
+    const confirm = document.getElementById("loginPasswordConfirm").value;
 
     if (!email) {
         showLoginError("Please enter your email address.");
@@ -253,21 +263,60 @@ async function attemptLogin() {
     }
 
     showLoginError("");
+
     try {
-        const data = await api('/api/login', { email, passcode });
+        // --- first sign-in: create the password ---
+        if (loginMode === 'create') {
+            if (password.length < 6) {
+                showLoginError("Please choose a password of at least 6 characters.");
+                return;
+            }
+            if (password !== confirm) {
+                showLoginError("The two passwords do not match.");
+                return;
+            }
+            const created = await api('/api/set-password', { email, password });
+            setToken(created.token);
+            showToast("Password created. Welcome!");
+            applySession(created);
+            return;
+        }
+
+        // --- normal sign-in ---
+        const data = await api('/api/login', { email, passcode, password });
+
+        // Server says this student has not chosen a password yet
+        if (data.needsPassword) {
+            loginMode = 'create';
+            document.getElementById("studentPassField").style.display = "block";
+            document.getElementById("confirmPassField").style.display = "block";
+            document.getElementById("studentPassLabel").textContent = "Choose a password";
+            document.getElementById("loginPassword").placeholder = "At least 6 characters";
+            setLoginButton("Create password & sign in");
+            showLoginError("");
+            document.getElementById("loginPassword").focus();
+            return;
+        }
+
         setToken(data.token);
         applySession(data);
+
     } catch (err) {
         if (err instanceof TypeError || err.message === 'BACKEND_MISSING') {
             showLoginError(
-                "The app's server isn't running, so the passcode can't be checked. " +
+                "The app's server isn't running, so the login can't be checked. " +
                 "Stop VS Code Live Preview, run  npm start  in the terminal, then open http://localhost:3000"
             );
-        } else if (err.message.includes('passcode')) {
-            showLoginError(err.message + " The passcode is printed in the terminal where you ran npm start.");
-        } else {
-            showLoginError(err.message);
+            return;
         }
+
+        // They have a password but did not type one — reveal the box
+        if (err.message.indexOf('enter your password') !== -1) {
+            document.getElementById("studentPassField").style.display = "block";
+            document.getElementById("studentPassLabel").textContent = "Password";
+            document.getElementById("loginPassword").focus();
+        }
+        showLoginError(err.message);
     }
 }
 
@@ -308,7 +357,13 @@ async function logoutUser() {
     document.getElementById("loginScreen").style.display = "flex";
     document.getElementById("loginEmail").value = "";
     document.getElementById("loginAdminPass").value = "";
+    document.getElementById("loginPassword").value = "";
+    document.getElementById("loginPasswordConfirm").value = "";
     document.getElementById("adminPassField").style.display = "none";
+    document.getElementById("studentPassField").style.display = "none";
+    document.getElementById("confirmPassField").style.display = "none";
+    loginMode = 'signin';
+    setLoginButton("Sign In");
     document.getElementById("adminToggle").style.display = "none";
     showToast("You have been signed out.");
 }
@@ -354,8 +409,8 @@ function bootAppForUser() {
     if (state.user.isAdmin) {
         // The admin previews both courses
         state.enrollments = {
-            "1": { purchasedOn: "2020-01-01", accessMode: "full", batch: null },
-            "2": { purchasedOn: "2020-01-01", accessMode: "full", batch: 1 }
+            "1": { purchasedOn: "2020-01-01", accessMode: "full", batch: 1 },
+            "2": { purchasedOn: "2020-01-01", accessMode: "full", batch: null }
         };
     }
 
@@ -1704,14 +1759,22 @@ function renderAdminAnalytics() {
                     <span class="asc-name">${student.name || 'Student'}</span>
                     <span class="asc-email">${email}</span>
                 </div>
-                <button class="save-note-btn" onclick="adminRemoveStudent('${email}')"
-                        style="background:var(--color-error); padding:4px 8px; font-size:9px;">
-                    <i class="fa-solid fa-trash"></i> Remove
-                </button>
+                <div style="display:flex; gap:5px; flex-shrink:0;">
+                    <button class="save-note-btn" onclick="adminResetPassword('${email}')"
+                            style="background:var(--bg-app); border:1px solid var(--color-border); color:var(--color-text); padding:4px 8px; font-size:9px;"
+                            title="Let them choose a new password">
+                        <i class="fa-solid fa-key"></i> Reset password
+                    </button>
+                    <button class="save-note-btn" onclick="adminRemoveStudent('${email}')"
+                            style="background:var(--color-error); padding:4px 8px; font-size:9px;">
+                        <i class="fa-solid fa-trash"></i> Remove
+                    </button>
+                </div>
             </div>
             <div class="asc-meta">
                 <span><i class="fa-solid fa-stopwatch"></i> <strong>${formatDuration(allSeconds)}</strong> total watch time</span>
                 <span><i class="fa-regular fa-clock"></i> Last active: ${lastActive}</span>
+                <span><i class="fa-solid fa-lock"></i> ${student.hasPassword ? 'Password set' : 'No password yet'}</span>
             </div>
             ${courseRows || `<div style="font-size:10px; color:var(--color-text-muted);">No course access assigned.</div>`}
         </div>`;
@@ -1759,6 +1822,15 @@ async function adminRemoveEnrollment(email, courseId) {
     try {
         await api('/api/admin/student/remove', { email, courseId });
         showToast("Enrollment removed.", false);
+        renderAdminDashboard();
+    } catch (e) { showToast(e.message, false); }
+}
+
+async function adminResetPassword(email) {
+    if (!confirm(`Reset the password for ${email}? They will be signed out and will choose a new one next time they sign in.`)) return;
+    try {
+        await api('/api/admin/student/reset-password', { email });
+        showToast(`${email} can now set a new password.`);
         renderAdminDashboard();
     } catch (e) { showToast(e.message, false); }
 }

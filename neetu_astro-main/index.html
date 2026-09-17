@@ -7,7 +7,7 @@
     <!-- FontAwesome Luxury Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Style Sheet -->
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=7">
 
     <!-- Critical player layout — inlined on purpose so the video still sizes
          correctly even if styles.css is cached, blocked or slow. -->
@@ -39,21 +39,34 @@
                        autocomplete="email" onkeydown="handleLoginEnter(event)" oninput="onLoginEmailInput()">
             </div>
 
+            <div class="form-field" id="studentPassField" style="display:none;">
+                <label id="studentPassLabel">Password</label>
+                <input type="password" class="form-input-text" id="loginPassword" placeholder="Enter your password"
+                       onkeydown="handleLoginEnter(event)">
+            </div>
+
+            <div class="form-field" id="confirmPassField" style="display:none;">
+                <label>Confirm password</label>
+                <input type="password" class="form-input-text" id="loginPasswordConfirm" placeholder="Type it again"
+                       onkeydown="handleLoginEnter(event)">
+            </div>
+
             <div class="form-field" id="adminPassField" style="display:none;">
                 <label>Admin passcode</label>
                 <input type="password" class="form-input-text" id="loginAdminPass" placeholder="Enter admin passcode"
                        onkeydown="handleLoginEnter(event)">
             </div>
 
-            <button class="action-submit-btn" onclick="attemptLogin()">
-                <i class="fa-solid fa-right-to-bracket"></i> Sign In
+            <button class="action-submit-btn" id="loginSubmitBtn" onclick="attemptLogin()">
+                <i class="fa-solid fa-right-to-bracket"></i> <span id="loginBtnLabel">Sign In</span>
             </button>
 
             <div class="login-error" id="loginError"></div>
 
             <div class="login-footnote">
-                Access is limited to enrolled students. If you have purchased the course
-                and cannot sign in, please contact Neetu so your email can be added.
+                Access is limited to enrolled students. The first time you sign in you will
+                choose your own password. If you have purchased the course and cannot sign
+                in, please contact Neetu.
             </div>
         </div>
     </div>
@@ -822,7 +835,7 @@
     </div>
 
     <!-- Core App Logic Driver Script -->
-        <script src="app.js?v=5"></script>
+    <script src="app.js?v=7"></script>
 
 </body>
 </html>
